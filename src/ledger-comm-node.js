@@ -15,7 +15,11 @@
 *  limitations under the License.
 ********************************************************************************/
 
-var HID = require('node-hid');
+// HACK: We conditionally require `node-hid` depending on whether we are running on CIRCLECI
+// since importing this package requires access to a USB drive which we don't have in
+// that environment. In order to run our fully stubbed out unit tests on CI, we need to
+// remove this import.
+HID = process.env.CIRCLECI !== 'true' ? require('node-hid') : {};
 var Q = require('q');
 
 var LedgerNode = function(device, ledgerTransport, timeout, debug) {
